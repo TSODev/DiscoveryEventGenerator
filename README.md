@@ -8,7 +8,7 @@ exemple de ligne de commande: (nécessite un JVM)
 Il s'agit d'un programme en ligne de commande qui permet de générer un évènement dans BMC Discovery
 
 
-**usage**: [-h] [-v] -s SERVER -u USERNAME -p PASSWORD [-q QUERY] [-o OUTPUT]
+**usage**: [-h] [-x] [-v] -s SERVER -u USERNAME -p PASSWORD -e EVENT -t TYPE [-a PARAMS]
 
 Discovery Event Generator :
 
