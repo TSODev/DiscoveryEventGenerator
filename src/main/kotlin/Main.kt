@@ -25,7 +25,7 @@ class ParsedArgs(parser: ArgParser) {
     val server by parser.storing(
         "-s", "--server",
         help = "URL API du serveur Discovery , (https et termine avec '/') \n " +
-        "généralement https://server/api/v1.1/"
+                "généralement https://server/api/v1.1/"
     )
 //        .addValidator {
 //        if (!value.matches(Regex(validURL)))
@@ -64,20 +64,19 @@ class ParsedArgs(parser: ArgParser) {
         help = "Parametres additionels (string format JSON)"
     ).default("{\"detail1\":\"exemple\"}")
 
-
+}
     fun main(args: Array<String>): Unit = mainBody {
-
 
 
         val prologue = "Discovery Event Generator  : "
         val epilogue = "TSODev pour Orange Business"
 
-        ArgParser(args,ArgParser.Mode.GNU,DefaultHelpFormatter(prologue,epilogue)).parseInto(::ParsedArgs).run {
+        ArgParser(args, ArgParser.Mode.GNU, DefaultHelpFormatter(prologue, epilogue)).parseInto(::ParsedArgs).run {
 
 
-            logger.info("===========================================================================")
+            logger.info("============================================================================")
             logger.info(" Discovery Event Generator - TSO pour Orange Business - 08/23 - version 1.0 ")
-            logger.info("===========================================================================")
+            logger.info("============================================================================")
 
             val gson = Gson()
             val jsonParams = gson.fromJson(params, JsonObject::class.java)
@@ -114,13 +113,11 @@ class ParsedArgs(parser: ArgParser) {
                     }
 
 
-
-                val result = apiSendEvent(server, event, type, params,unsafe)
+                val result = apiSendEvent(server, event, type, params, unsafe)
                 logger.debug("Event ID: $result")
 
-            }
-            catch (exception: Exception) {
-                logger.error(exception){"Erreur : $exception -> vérifiez les arguments svp..."}
+            } catch (exception: Exception) {
+                logger.error(exception) { "Erreur : $exception -> vérifiez les arguments svp..." }
             }
         }
     }
