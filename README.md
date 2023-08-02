@@ -2,7 +2,7 @@
 
 exemple de ligne de commande: (nécessite un JVM)
 
-**./DiscoveryEventGenerator -s "https://server/api/v1.9/" -u USERNAME -p PASSWORD -e "myApp" -t "custom" -a"{'detail 1':'Info Detail 1'}" -xv**
+**./DiscoveryEventGenerator -s "https://server/api/v1.9/" -u USERNAME -p PASSWORD -e "myApp" -t "custom" -a"{'detail 1':'Info Detail 1'}" -x**
 
 
 Il s'agit d'un programme en ligne de commande qui permet de générer un évènement dans BMC Discovery
