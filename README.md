@@ -2,15 +2,13 @@
 
 exemple de ligne de commande: (nécessite un JVM)
 
-**./DiscoveryEventGenerator -s "https://server/api/v1.9/" -u USERNAME -p PASSWORD -e "myApp" -t "custom" -a"{"detail1":"detail1"}" -xv**
+**./DiscoveryEventGenerator -s "https://server/api/v1.9/" -u USERNAME -p PASSWORD -e "myApp" -t "custom" -a"{'detail 1':'Info Detail 1'}" -xv**
 
 
 Il s'agit d'un programme en ligne de commande qui permet de générer un évènement dans BMC Discovery
 
 
-**usage**: [-h] [-x] [-v] -s SERVER -u USERNAME -p PASSWORD -e EVENT -t TYPE [-a PARAMS]
-
-Discovery Event Generator :
+**usage**: [-h] [-x] -s SERVER -u USERNAME -p PASSWORD -e EVENT -t TYPE [-a PARAMS]
 
 
 required arguments:
@@ -35,8 +33,6 @@ optional arguments:
 
 **-a PARAMS, --params PARAMS** :  Parametres additionels (string format JSON)
 
-**-h, --help** :            show this help message and exit
-
-**-v, --verbose** :         valide le mode verbeux
+**-h, --help** :            affiche le message d'aide et quitte.
 
 **-x, --unsecure** :        pas de vérification du certificat SSL (accepte les certificats auto signés)
