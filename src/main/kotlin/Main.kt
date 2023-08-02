@@ -130,7 +130,7 @@ class ParsedArgs(parser: ArgParser) {
                             }
                         }
                     } catch (exception: HttpException) {
-                        logger.error(exception) { "Erreur HTTP : $exception" }
+                        logger.error("Erreur : ${exception.message}" )
                         exitProcess(-1)
                     }
                 } else {
