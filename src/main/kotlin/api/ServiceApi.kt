@@ -2,7 +2,6 @@ package api
 
 
 import com.google.gson.JsonObject
-import io.github.oshai.kotlinlogging.KotlinLogging
 import models.AuthentificationResponse
 import network.RetrofitClient
 import network.TokenHolder
@@ -10,8 +9,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Response
+import utils.logging.TLogger
 
-private val logger = KotlinLogging.logger {}
+private val logger = TLogger
 
 interface ServiceApi {
 
