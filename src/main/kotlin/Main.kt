@@ -2,6 +2,7 @@ import api.ServiceApi.Companion.apiGetToken
 
 import api.ServiceApi.Companion.apiSendEvent
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.PrintMessage
 import com.github.ajalt.clikt.core.UsageError
 import com.github.ajalt.clikt.parameters.options.*
 import com.github.ajalt.clikt.parameters.types.choice
@@ -34,7 +35,7 @@ class DiscoveryEventGenerator: CliktCommand(help = "Enregistre un Evenement dans
         .validate {
             if (!it.matches(Regex(validURL)))
                 throw UsageError("URL du serveur invalide : $it \n" +
-                        "lancer le programme avec l'option -h pour de l'aide")
+                        "lancer le programme avec l'option -h pour de l'aide", server , -1)
         }
 
     val username: String by option(
@@ -90,16 +91,18 @@ class DiscoveryEventGenerator: CliktCommand(help = "Enregistre un Evenement dans
                 echo("==============================================================================")
 
         logger.setRunLevel(debugLevel)
-        logger.addDateTimeToPrefix()
-        logger.addDurationToPrefix()
+        logger.addDateToPrefix()
+        logger.addTimeToPrefix()
+        logger.addToPrefix("->")
+//        logger.addDurationToPrefix()
 
                 val gson = Gson()
                 var jsonParams = JsonObject()
                 try {
                     jsonParams = gson.fromJson(params, JsonObject::class.java)
                 } catch (e: JsonSyntaxException) {
-                    logger.error("Erreur JSON pour PARAMS : ${e.message}")
-                    exitProcess(-5)
+                    throw PrintMessage("Erreur JSON pour PARAMS : ${e.message}", -5, true)
+    //                exitProcess(-5)
                 }
 
 
@@ -138,12 +141,12 @@ class DiscoveryEventGenerator: CliktCommand(help = "Enregistre un Evenement dans
                             }
                         }
                     } catch (exception: HttpException) {
-                        logger.error("Erreur : ${exception.message}" )
-                        exitProcess(-1)
+                        throw PrintMessage("Erreur : ${exception.message}", -1, true )
+//                        exitProcess(-1)
                     }
                 } else {
-                    logger.error("USERNAME et PASSWORD ne doivent pas être vide !")
-                    exitProcess(-3)
+                    throw PrintMessage("USERNAME et PASSWORD ne doivent pas être vide !", -3, true)
+//                    exitProcess(-3)
                 }
 
 

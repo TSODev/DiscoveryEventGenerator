@@ -70,13 +70,13 @@ object TLogger {
 
         val dt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy hh:mm:ss.SSS"))
         val date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
-        val time = LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss.SSS"))
+        val time = LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mm:ss"))
 
         prefix.forEach { p ->
             when (p) {
                 Tag.DATETIME.value -> toPrint.add("[$dt] ")
-                Tag.DATE.value -> toPrint.add("[$date] ")
-                Tag.TIME.value -> toPrint.add("[$time] ")
+                Tag.DATE.value -> toPrint.add("le $date ")
+                Tag.TIME.value -> toPrint.add("à $time ")
                 Tag.DURATION.value -> toPrint.add("[${duration.toMillis()}ms] ")
                 else -> {
                     toPrint.add(p)
