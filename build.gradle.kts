@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "fr.tsodev"
-version = "1.0.2"
+version = "1.0.3"
 
 repositories {
     google()
@@ -28,9 +28,9 @@ tasks.test {
     useJUnitPlatform()
 }
 
-kotlin {
-    jvmToolchain(17)
-}
+//kotlin {
+//    jvmToolchain(17)
+//}
 
 application {
     mainClass.set("MainKt")

@@ -59,6 +59,7 @@ class RetrofitClient(serverUrl: String) {
                 val builder = OkHttpClient.Builder()
                 builder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
                 builder.hostnameVerifier(HostnameVerifier { hostname, session -> true })
+                builder.addInterceptor(LoggingInterceptor)
                 builder.addInterceptor(RequestInterceptor)
                 builder.build()
             } catch (e: Exception) {
@@ -67,7 +68,7 @@ class RetrofitClient(serverUrl: String) {
 
         private val safeOkHttpClient = OkHttpClient()
             .newBuilder()
-//            .addInterceptor(LoggingInterceptor)
+            .addInterceptor(LoggingInterceptor)
             .addInterceptor(RequestInterceptor)
             .build()
 

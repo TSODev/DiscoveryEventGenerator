@@ -21,8 +21,13 @@ import kotlin.system.exitProcess
 
 private val logger = TLogger
 
-fun main(args: Array<String>):Unit =   DiscoveryEventGenerator().versionOption("1.0.2").main(args)
+fun main(args: Array<String>):Unit =   DiscoveryEventGenerator().versionOption("1.0.3").main(args)
 class DiscoveryEventGenerator: CliktCommand(help = "Enregistre un Evenement dans BMC Discovery") {
+
+    val defaultUserName = "-----"
+    val defaultPassword = "*****"
+    val defaultToken = "0123456789"
+    var isTokenAuthenticed = false
 
     val validURL = "^(http(s):\\/\\/.)[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)(/)\$"
     //   val validURL_IP = "^http (s?):\\/\\/ ( (2 [0-5] {2}|1 [0-9] {2}| [0-9] {1,2})\\.) {3} (2 [0-5] {2}|1 [0-9] {2}| [0-9] {1,2}) (:\\d+)?(/)\$"
@@ -41,12 +46,17 @@ class DiscoveryEventGenerator: CliktCommand(help = "Enregistre un Evenement dans
     val username: String by option(
         "-u", "--username",
         help = "Nom de l'utilisateur"
-    ).prompt()
+    ).default(defaultUserName)
 
     val password: String by option(
         "-p", "--password",
         help = "Mot de Passe de l'utilisateur"
-    ).prompt(hideInput = true)
+    ).default(defaultPassword)
+
+    val jeton: String by option(
+        "--token",
+        help = "Jeton d'identification, (prioritaire par rapport à User/Password)"
+    ).default(defaultToken)
 
     val unsafe by option( "-x", "--unsecure",
         help = "pas de vérification du certificat SSL\n" +
@@ -59,7 +69,7 @@ class DiscoveryEventGenerator: CliktCommand(help = "Enregistre un Evenement dans
     ).prompt()
 
     val type by option(
-        "-t", "--type",
+        "--type",
         help = "type de l'évènement"
     ).prompt()
 
@@ -87,7 +97,7 @@ class DiscoveryEventGenerator: CliktCommand(help = "Enregistre un Evenement dans
     override fun run() {
 
                 echo("==============================================================================")
-                echo(" Discovery Event Generator - TSO pour Orange Business - 08/23 - version 1.0.2 ")
+                echo(" Discovery Event Generator - TSO pour Orange Business - 08/23 - version 1.0.3 ")
                 echo("==============================================================================")
 
         logger.setRunLevel(debugLevel)
@@ -105,10 +115,20 @@ class DiscoveryEventGenerator: CliktCommand(help = "Enregistre un Evenement dans
     //                exitProcess(-5)
                 }
 
+                if (username == defaultUserName || password == defaultPassword) {
+                    if (jeton == defaultToken) {
+                        throw PrintMessage("Erreur  d'argument , veuillez renseigner (user/password) ou (token)",-4, true)
+                    } else {
+                        TokenHolder.saveToken(jeton)
+                        isTokenAuthenticed = true
+                    }
+                }
+
 
                 apiCallByCoroutines(
                     username,
                     password,
+                    isTokenAuthenticed,
                     server,
                     event,
                     type,
@@ -122,6 +142,7 @@ class DiscoveryEventGenerator: CliktCommand(help = "Enregistre un Evenement dans
     private fun apiCallByCoroutines(
         username: String,
         password: String,
+        alreadyAuthenticated: Boolean,
         server: String,
         event: String,
         type: String,
@@ -131,23 +152,26 @@ class DiscoveryEventGenerator: CliktCommand(help = "Enregistre un Evenement dans
         launch { // launch new coroutine in the scope of runBlocking
 
 
-                if (username.isNotEmpty() && password.isNotEmpty()) {
+//                if () {
                     try {
-                        apiGetToken(server, username, password, unsafe).let { token: String? ->
-                            if (token != null) {
-                                TokenHolder.saveToken(token)
+                        if (!alreadyAuthenticated)
+                            apiGetToken(server, username, password, unsafe).let { token: String? ->
+                                if (token != null) {
+                                    TokenHolder.saveToken(token)
+                                    val result = apiSendEvent(server, event, type, params, unsafe)
+                                    logger.info("Event ID: $result")
+                                }
+                            } else {
                                 val result = apiSendEvent(server, event, type, params, unsafe)
                                 logger.info("Event ID: $result")
-                            }
                         }
                     } catch (exception: HttpException) {
                         throw PrintMessage("Erreur : ${exception.message}", -1, true )
 //                        exitProcess(-1)
                     }
-                } else {
-                    throw PrintMessage("USERNAME et PASSWORD ne doivent pas être vide !", -3, true)
-//                    exitProcess(-3)
-                }
+//                } else {
+//                    throw PrintMessage("USERNAME et PASSWORD ne doivent pas être vide !", -3, true)
+//                }
 
 
         }

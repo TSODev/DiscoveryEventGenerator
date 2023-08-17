@@ -24,8 +24,10 @@ Il s'agit d'un programme en ligne de commande qui permet de générer un évène
                          l'utilisation de certificat auto signé)
                          
   **-e, --event**=\<text>     nom de la source de l'évènement
-  
-  **-t, --type**=\<text>      type de l'évènement
+
+  **--token**=\<text>         Jeton d'identification, (prioritaire par rapport à User/Password)
+
+  **--type**=\<text>      type de l'évènement
   
   **-a, --params**=\<text>    Parametres additionnels (string format JSON)
 
